@@ -51,15 +51,15 @@ func (p *Proxy) AddRequestFilter(f RequestFilter) {
 	p.mitm.SetCriteria(criteria)
 }
 
-func (p *Proxy) AddRequestInReadHook(h HookRequestRead) {
+func (p *Proxy) AddRequestInHook(h HookRequestRead) {
 	hooks := p.mitm.GetHooks()
-	hooks = hooks.AddRequestInReadHook(h)
+	hooks = hooks.AddRequestInHook(h)
 	p.mitm.SetHooks(hooks)
 }
 
-func (p *Proxy) AddRequestOutReadHook(h HookRequestRead) {
+func (p *Proxy) AddRequestOutHook(h HookRequestRead) {
 	hooks := p.mitm.GetHooks()
-	hooks = hooks.AddRequestOutReadHook(h)
+	hooks = hooks.AddRequestOutHook(h)
 	p.mitm.SetHooks(hooks)
 }
 
@@ -69,15 +69,15 @@ func (p *Proxy) AddRequestModHook(h HookRequestMod) {
 	p.mitm.SetHooks(hooks)
 }
 
-func (p *Proxy) AddResponseInReadHook(h HookResponseRead) {
+func (p *Proxy) AddResponseInHook(h HookResponseRead) {
 	hooks := p.mitm.GetHooks()
-	hooks = hooks.AddResponseInReadHook(h)
+	hooks = hooks.AddResponseInHook(h)
 	p.mitm.SetHooks(hooks)
 }
 
-func (p *Proxy) AddResponseOutReadHook(h HookResponseRead) {
+func (p *Proxy) AddResponseOutHook(h HookResponseRead) {
 	hooks := p.mitm.GetHooks()
-	hooks = hooks.AddResponseOutReadHook(h)
+	hooks = hooks.AddResponseOutHook(h)
 	p.mitm.SetHooks(hooks)
 }
 

@@ -49,13 +49,13 @@ func (hf HookResponseModFunc) HookMod(r *http.Response, id uuid.UUID) error {
 }
 
 type hooks struct {
-	requestInReadHooks  []HookRequestRead
-	requestModHooks     []HookRequestMod
-	requestOutReadHooks []HookRequestRead
+	requestInHooks  []HookRequestRead
+	requestModHooks []HookRequestMod
+	requestOutHooks []HookRequestRead
 
-	responseInReadHooks  []HookResponseRead
-	responseModHooks     []HookResponseMod
-	responseOutReadHooks []HookResponseRead
+	responseInHooks  []HookResponseRead
+	responseModHooks []HookResponseMod
+	responseOutHooks []HookResponseRead
 }
 
 func (h *hooks) RunRequestHooks(r *http.Request, id uuid.UUID) error {
@@ -68,7 +68,7 @@ func (h *hooks) RunRequestHooks(r *http.Request, id uuid.UUID) error {
 	inReq := cloneRequest(r)
 	go func() {
 		inGroup, _ := errgroup.WithContext(inReq.Context())
-		for _, hook := range h.requestInReadHooks {
+		for _, hook := range h.requestInHooks {
 			tHook := hook
 
 			req := cloneRequest(inReq)
@@ -101,7 +101,7 @@ func (h *hooks) RunRequestHooks(r *http.Request, id uuid.UUID) error {
 	outReq := cloneRequest(r)
 	go func() {
 		outGroup, _ := errgroup.WithContext(r.Context())
-		for _, hook := range h.requestOutReadHooks {
+		for _, hook := range h.requestOutHooks {
 			tHook := hook
 
 			req := cloneRequest(outReq)
@@ -130,7 +130,7 @@ func (h *hooks) RunResponseHooks(r *http.Response, id uuid.UUID) error {
 	inResp := cloneResponse(r)
 	go func() {
 		inGroup, _ := errgroup.WithContext(inResp.Request.Context())
-		for _, hook := range h.responseInReadHooks {
+		for _, hook := range h.responseInHooks {
 			tHook := hook
 
 			resp := cloneResponse(inResp)
@@ -163,7 +163,7 @@ func (h *hooks) RunResponseHooks(r *http.Response, id uuid.UUID) error {
 	outResp := cloneResponse(r)
 	go func() {
 		outGroup, _ := errgroup.WithContext(r.Request.Context())
-		for _, hook := range h.responseOutReadHooks {
+		for _, hook := range h.responseOutHooks {
 			tHook := hook
 
 			resp := cloneResponse(outResp)
@@ -188,34 +188,34 @@ func (h *hooks) clone() *hooks {
 	}
 
 	return &hooks{
-		requestInReadHooks:  append([]HookRequestRead{}, h.requestInReadHooks...),
-		requestModHooks:     append([]HookRequestMod{}, h.requestModHooks...),
-		requestOutReadHooks: append([]HookRequestRead{}, h.requestOutReadHooks...),
+		requestInHooks:  append([]HookRequestRead{}, h.requestInHooks...),
+		requestModHooks: append([]HookRequestMod{}, h.requestModHooks...),
+		requestOutHooks: append([]HookRequestRead{}, h.requestOutHooks...),
 
-		responseInReadHooks:  append([]HookResponseRead{}, h.responseInReadHooks...),
-		responseModHooks:     append([]HookResponseMod{}, h.responseModHooks...),
-		responseOutReadHooks: append([]HookResponseRead{}, h.responseOutReadHooks...),
+		responseInHooks:  append([]HookResponseRead{}, h.responseInHooks...),
+		responseModHooks: append([]HookResponseMod{}, h.responseModHooks...),
+		responseOutHooks: append([]HookResponseRead{}, h.responseOutHooks...),
 	}
 }
 
-func (h *hooks) AddRequestInReadHook(hook HookRequestRead) *hooks {
+func (h *hooks) AddRequestInHook(hook HookRequestRead) *hooks {
 	newHooks := h.clone()
 	if newHooks == nil {
 		newHooks = &hooks{}
 	}
 
-	newHooks.requestInReadHooks = append(newHooks.requestInReadHooks, hook)
+	newHooks.requestInHooks = append(newHooks.requestInHooks, hook)
 
 	return newHooks
 }
 
-func (h *hooks) AddRequestOutReadHook(hook HookRequestRead) *hooks {
+func (h *hooks) AddRequestOutHook(hook HookRequestRead) *hooks {
 	newHooks := h.clone()
 	if newHooks == nil {
 		newHooks = &hooks{}
 	}
 
-	newHooks.requestOutReadHooks = append(newHooks.requestOutReadHooks, hook)
+	newHooks.requestOutHooks = append(newHooks.requestOutHooks, hook)
 
 	return newHooks
 }
@@ -231,24 +231,24 @@ func (h *hooks) AddRequestModHook(hook HookRequestMod) *hooks {
 	return newHooks
 }
 
-func (h *hooks) AddResponseInReadHook(hook HookResponseRead) *hooks {
+func (h *hooks) AddResponseInHook(hook HookResponseRead) *hooks {
 	newHooks := h.clone()
 	if newHooks == nil {
 		newHooks = &hooks{}
 	}
 
-	newHooks.responseInReadHooks = append(newHooks.responseInReadHooks, hook)
+	newHooks.responseInHooks = append(newHooks.responseInHooks, hook)
 
 	return newHooks
 }
 
-func (h *hooks) AddResponseOutReadHook(hook HookResponseRead) *hooks {
+func (h *hooks) AddResponseOutHook(hook HookResponseRead) *hooks {
 	newHooks := h.clone()
 	if newHooks == nil {
 		newHooks = &hooks{}
 	}
 
-	newHooks.responseOutReadHooks = append(newHooks.responseOutReadHooks, hook)
+	newHooks.responseOutHooks = append(newHooks.responseOutHooks, hook)
 
 	return newHooks
 }

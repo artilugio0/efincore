@@ -164,13 +164,13 @@ func TestHTTPSRequest(t *testing.T) {
 	}
 }
 
-func TestSingleRequestInReadHook_ServerReceivesBody(t *testing.T) {
+func TestSingleRequestInHook_ServerReceivesBody(t *testing.T) {
 	proxy := runTestProxy(t)
 
 	var doneWg sync.WaitGroup
 	doneWg.Add(1)
 
-	proxy.AddRequestInReadHook(HookRequestReadFunc(func(r *http.Request, id uuid.UUID) error {
+	proxy.AddRequestInHook(HookRequestReadFunc(func(r *http.Request, id uuid.UUID) error {
 		defer doneWg.Done()
 		defer r.Body.Close()
 
@@ -212,7 +212,7 @@ func TestSingleRequestInReadHook_ServerReceivesBody(t *testing.T) {
 	}
 }
 
-func TestTwoRequestInReadHooks_HooksReadTheSameBody(t *testing.T) {
+func TestTwoRequestInHooks_HooksReadTheSameBody(t *testing.T) {
 	proxy := runTestProxy(t)
 
 	var gotBody1 string
@@ -220,7 +220,7 @@ func TestTwoRequestInReadHooks_HooksReadTheSameBody(t *testing.T) {
 	var doneWg sync.WaitGroup
 	doneWg.Add(2)
 
-	proxy.AddRequestInReadHook(HookRequestReadFunc(func(r *http.Request, id uuid.UUID) error {
+	proxy.AddRequestInHook(HookRequestReadFunc(func(r *http.Request, id uuid.UUID) error {
 		defer doneWg.Done()
 		defer r.Body.Close()
 
@@ -233,7 +233,7 @@ func TestTwoRequestInReadHooks_HooksReadTheSameBody(t *testing.T) {
 		return nil
 	}))
 
-	proxy.AddRequestInReadHook(HookRequestReadFunc(func(r *http.Request, id uuid.UUID) error {
+	proxy.AddRequestInHook(HookRequestReadFunc(func(r *http.Request, id uuid.UUID) error {
 		defer doneWg.Done()
 		defer r.Body.Close()
 
@@ -299,7 +299,7 @@ func TestRequestInModAndOutHooks_OutHookAndServerGetModifiedBody(t *testing.T) {
 	var doneWg sync.WaitGroup
 	doneWg.Add(3)
 
-	proxy.AddRequestInReadHook(HookRequestReadFunc(func(r *http.Request, id uuid.UUID) error {
+	proxy.AddRequestInHook(HookRequestReadFunc(func(r *http.Request, id uuid.UUID) error {
 		defer doneWg.Done()
 		defer r.Body.Close()
 
@@ -328,7 +328,7 @@ func TestRequestInModAndOutHooks_OutHookAndServerGetModifiedBody(t *testing.T) {
 		return nil
 	}))
 
-	proxy.AddRequestOutReadHook(HookRequestReadFunc(func(r *http.Request, id uuid.UUID) error {
+	proxy.AddRequestOutHook(HookRequestReadFunc(func(r *http.Request, id uuid.UUID) error {
 		defer doneWg.Done()
 		defer r.Body.Close()
 
@@ -395,7 +395,7 @@ func TestRequestInModAndOutHooks_OutHookAndServerGetModifiedBody_UsingRBodyGetBy
 	var doneWg sync.WaitGroup
 	doneWg.Add(3)
 
-	proxy.AddRequestInReadHook(HookRequestReadFunc(func(r *http.Request, id uuid.UUID) error {
+	proxy.AddRequestInHook(HookRequestReadFunc(func(r *http.Request, id uuid.UUID) error {
 		defer doneWg.Done()
 		defer r.Body.Close()
 
@@ -424,7 +424,7 @@ func TestRequestInModAndOutHooks_OutHookAndServerGetModifiedBody_UsingRBodyGetBy
 		return nil
 	}))
 
-	proxy.AddRequestOutReadHook(HookRequestReadFunc(func(r *http.Request, id uuid.UUID) error {
+	proxy.AddRequestOutHook(HookRequestReadFunc(func(r *http.Request, id uuid.UUID) error {
 		defer doneWg.Done()
 		defer r.Body.Close()
 
@@ -478,13 +478,13 @@ func TestRequestInModAndOutHooks_OutHookAndServerGetModifiedBody_UsingRBodyGetBy
 }
 
 // Responses hooks tests
-func TestSingleResponseInReadHook_ClientReceivesBody(t *testing.T) {
+func TestSingleResponseInHook_ClientReceivesBody(t *testing.T) {
 	proxy := runTestProxy(t)
 
 	var doneWg sync.WaitGroup
 	doneWg.Add(1)
 
-	proxy.AddResponseInReadHook(HookResponseReadFunc(func(r *http.Response, id uuid.UUID) error {
+	proxy.AddResponseInHook(HookResponseReadFunc(func(r *http.Response, id uuid.UUID) error {
 		defer doneWg.Done()
 		defer r.Body.Close()
 
@@ -525,7 +525,7 @@ func TestSingleResponseInReadHook_ClientReceivesBody(t *testing.T) {
 	}
 }
 
-func TestTwoResponseInReadHooks_HooksReadTheSameBody(t *testing.T) {
+func TestTwoResponseInHooks_HooksReadTheSameBody(t *testing.T) {
 	proxy := runTestProxy(t)
 
 	var gotBody1 string
@@ -534,7 +534,7 @@ func TestTwoResponseInReadHooks_HooksReadTheSameBody(t *testing.T) {
 	var doneWg sync.WaitGroup
 	doneWg.Add(2)
 
-	proxy.AddResponseInReadHook(HookResponseReadFunc(func(r *http.Response, id uuid.UUID) error {
+	proxy.AddResponseInHook(HookResponseReadFunc(func(r *http.Response, id uuid.UUID) error {
 		defer doneWg.Done()
 		defer r.Body.Close()
 
@@ -547,7 +547,7 @@ func TestTwoResponseInReadHooks_HooksReadTheSameBody(t *testing.T) {
 		return nil
 	}))
 
-	proxy.AddResponseInReadHook(HookResponseReadFunc(func(r *http.Response, id uuid.UUID) error {
+	proxy.AddResponseInHook(HookResponseReadFunc(func(r *http.Response, id uuid.UUID) error {
 		defer doneWg.Done()
 		defer r.Body.Close()
 
@@ -611,7 +611,7 @@ func TestResponseInModAndOutHooks_OutHookAndServerGetModifiedBody(t *testing.T) 
 	var doneWg sync.WaitGroup
 	doneWg.Add(3)
 
-	proxy.AddResponseInReadHook(HookResponseReadFunc(func(r *http.Response, id uuid.UUID) error {
+	proxy.AddResponseInHook(HookResponseReadFunc(func(r *http.Response, id uuid.UUID) error {
 		defer doneWg.Done()
 		defer r.Body.Close()
 
@@ -641,7 +641,7 @@ func TestResponseInModAndOutHooks_OutHookAndServerGetModifiedBody(t *testing.T) 
 		return nil
 	}))
 
-	proxy.AddResponseOutReadHook(HookResponseReadFunc(func(r *http.Response, id uuid.UUID) error {
+	proxy.AddResponseOutHook(HookResponseReadFunc(func(r *http.Response, id uuid.UUID) error {
 		defer doneWg.Done()
 		defer r.Body.Close()
 
@@ -708,7 +708,7 @@ func TestResponseInModAndOutHooks_OutHookAndServerGetModifiedBody_UsingRBodyGetB
 	var doneWg sync.WaitGroup
 	doneWg.Add(3)
 
-	proxy.AddResponseInReadHook(HookResponseReadFunc(func(r *http.Response, id uuid.UUID) error {
+	proxy.AddResponseInHook(HookResponseReadFunc(func(r *http.Response, id uuid.UUID) error {
 		defer doneWg.Done()
 		defer r.Body.Close()
 
@@ -738,7 +738,7 @@ func TestResponseInModAndOutHooks_OutHookAndServerGetModifiedBody_UsingRBodyGetB
 		return nil
 	}))
 
-	proxy.AddResponseOutReadHook(HookResponseReadFunc(func(r *http.Response, id uuid.UUID) error {
+	proxy.AddResponseOutHook(HookResponseReadFunc(func(r *http.Response, id uuid.UUID) error {
 		defer doneWg.Done()
 		defer r.Body.Close()
 

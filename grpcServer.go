@@ -76,7 +76,7 @@ func NewGRPCServer(addr string) *GRPCServer {
 	}
 }
 
-func (s *GRPCServer) RequestInReadHook(r *http.Request, id uuid.UUID) error {
+func (s *GRPCServer) RequestInHook(r *http.Request, id uuid.UUID) error {
 	group, _ := errgroup.WithContext(r.Context())
 
 	rData := requestData{r, id}
@@ -123,7 +123,7 @@ func (s *GRPCServer) RequestModHook(r *http.Request, id uuid.UUID) error {
 	return nil
 }
 
-func (s *GRPCServer) RequestOutReadHook(r *http.Request, id uuid.UUID) error {
+func (s *GRPCServer) RequestOutHook(r *http.Request, id uuid.UUID) error {
 	group, _ := errgroup.WithContext(r.Context())
 
 	rData := requestData{r, id}
@@ -143,7 +143,7 @@ func (s *GRPCServer) RequestOutReadHook(r *http.Request, id uuid.UUID) error {
 	return group.Wait()
 }
 
-func (s *GRPCServer) ResponseInReadHook(r *http.Response, id uuid.UUID) error {
+func (s *GRPCServer) ResponseInHook(r *http.Response, id uuid.UUID) error {
 	group, _ := errgroup.WithContext(r.Request.Context())
 
 	rData := responseData{r, id}
@@ -189,7 +189,7 @@ func (s *GRPCServer) ResponseModHook(r *http.Response, id uuid.UUID) error {
 	return nil
 }
 
-func (s *GRPCServer) ResponseOutReadHook(r *http.Response, id uuid.UUID) error {
+func (s *GRPCServer) ResponseOutHook(r *http.Response, id uuid.UUID) error {
 	group, _ := errgroup.WithContext(r.Request.Context())
 
 	rData := responseData{r, id}
